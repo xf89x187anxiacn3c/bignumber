@@ -6,13 +6,13 @@
 //메인메뉴 -> 시작
 int gameMode1(){
   srand(time(NULL));
-  Card deck[10]; //주어진 카드 더미
+  Card deck[10] = {0,0,0}; //주어진 카드 더미
   seed(deck);
   int errorCheck = 0;
   
   int userInput[10] = {0}; //유저가 입력한 번호들
   int userInputN; //유저가 입력한 번호들의 개수
-  Card userDeck[10] = {0,0}; //유저가 입력한 번호의 카드들
+  Card userDeck[10] = {0,0,0}; //유저가 입력한 번호의 카드들
 
   int scoreDeck[10] = {0}; //계산이 진행될 공간
   int score = 0;
@@ -47,6 +47,11 @@ int gameMode1(){
         continue;
       }
 
+      if (userDeck[userInputN-1].prop == OPERATOR){
+        printf("마지막 카드는 숫자여야 합니다.\n");
+        continue;
+      }
+
       for(int i = 0 ; i < userInputN ; i++){
         //printf("%d",userInput[i]);
         for(int j = 0 ; j < userInputN ; j++){
@@ -66,7 +71,7 @@ int gameMode1(){
         }
       }
       if (errorCheck){
-        printf("기호나 숫자를 연달아 사용될 수 없습니다.\n");
+        printf("기호나 숫자를 연달아 사용할 수 없습니다.\n");
         continue;
       }
       
@@ -83,7 +88,7 @@ int gameMode1(){
     }
     //계산
     if(userInputN == 1){
-      //연산자가 없 경우
+      //연산자가 없는 경우
       score += scoreDeck[0];
     }else{
       //연산자가 있는 경우
@@ -130,6 +135,9 @@ int gameMode1(){
         case DIV: score += ( scoreDeck[0] / scoreDeck[2] ); break;
       }
     }
+    for(int i=0;i<10;i++){
+      deck[i].isNew = 0;
+    }
     reseed(deck);
     sort(deck);
   }
@@ -143,7 +151,7 @@ int gameMode1(){
 
 //메인메뉴 -> 하는 법
 int gameMode2(){
-  printf("\033[2J\033[1;1f1. 제시된 카드를 이용하여 5라운드 동안 최대한 큰 수를 만드세요!\n2. 카드 번호를 입력할 때에는 \"1 9 2\"과 같이 띄어쓰기로 구별합니다.\n3. 만든 수는 점수에, 그리고 점수는 \"나의 수\"에 더해집니다.\n");
+  printf("\033[2J\033[1;1f- 소개1. 제시된 카드를 이용하여 5라운드 동안 최대한 큰 수를 만드세요!\n2. 카드 번호를 입력할 때에는 \"1 9 2\"과 같이 띄어쓰기로 구별합니다.\n3. 만든 수는 점수에, 그리고 점수는 \"나의 수\"에 더해집니다.\n\n- 카드\n1. 카드는 숫자 카드 1~15, 기호 카드 4종이 있습니다.\n2. 숫자 카드는 언제나 7개, 기호 카드는 언제나 3개가 주어집니다.\n3. 사용하지 않은 카드는 다음 라운드에도 유지됩니다. 사용한 카드들은 무작위로 다시 뽑히며, 이렇게 새로 뽑힌 카드들은 빨간색으로 표시됩니다.\n\n");
   char next='\0';
   printf("ENTER를 입력해 메인으로 넘어가기");
   next = getchar();next = getchar();
@@ -156,9 +164,8 @@ int main(void) {
   int welcome = 1;
   char message[1024] = "";
   //메인메뉴 코드
-  //1:시작 2:강화 3:하는 법 4:저장 중 선택
   while (1) {
-    printf("\033[2J");
+    printf("\033[2J\033[0m");
     printf("\033[1;1f나의 수: %d\n", myNumber);
     if(welcome){
       if(myNumber == 0){

@@ -3,7 +3,6 @@
 #include <time.h>
 #include <string.h>
 
-//#define a b --> a를 b로 취급
 //카드 종류
 #define NUMBER 1
 #define OPERATOR 2
@@ -18,6 +17,7 @@
 typedef struct _card {
   int prop;
   int value;
+  int isNew;
 } Card;
 
 //@정렬함수: 숫자 정렬 후 기호가 +,-,*,/ 순으로 숫자 뒤에 오게 정렬
@@ -86,6 +86,7 @@ void reseed(Card *deck){
         deck[i].prop = OPERATOR;
         deck[i].value = rand() % 4 - 4;
       }
+      deck[i].isNew = 1;
     }
   }
 }
@@ -112,7 +113,12 @@ int load() {
 
 //덱 출력
 void printDeck(Card *deck) {
+  //출력
   for (int i = 0; i < 10; i++) {
+    //색상
+    if(deck[i].isNew){
+      printf("\033[31m");
+    }
     if (deck[i].value >= 0) {
       printf("[%d] ", deck[i].value);
     } else {
@@ -131,6 +137,7 @@ void printDeck(Card *deck) {
         break;
       }
     }
+    printf("\033[0m");
   }
   printf("\n");
   for (int i = 0; i < 10; i++) {
